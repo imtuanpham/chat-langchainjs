@@ -8,6 +8,28 @@ First, create a new `.env` file from `.env.example` and add your OpenAI API key 
 cp .env.example .env
 ```
 
+### Tuan's NOTES
+- Node.js v16.17.1
+- Yarn 1.22.19
+
+Note: I ran into the following error when running `yarn ingest`:
+```
+ReferenceError: Headers is not defined
+    at createRequest (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/langchain/src/util/axios-fetch-adapter.js:102:19)
+    at fetchAdapter (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/langchain/src/util/axios-fetch-adapter.js:25:19)
+    at dispatchRequest (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/axios/lib/core/dispatchRequest.js:58:10)
+    at Axios.request (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/axios/lib/core/Axios.js:108:15)
+    at Function.wrap (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/axios/lib/helpers/bind.js:9:15)
+    at <anonymous> (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/openai/dist/common.js:147:22)
+    at <anonymous> (/Users/tuanpham/sandbox/chat-langchainjs/node_modules/openai/dist/api.js:1539:123)
+```
+
+The workaround that I am using is to run the following
+
+```sh
+node --loader ts-node/esm ./ingest.ts
+```
+
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/) (v16 or higher)

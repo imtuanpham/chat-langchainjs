@@ -5,7 +5,10 @@ import * as fs from "fs";
 import { Document } from "langchain/document";
 import { BaseDocumentLoader } from "langchain/document_loaders";
 import path from "path";
-import { load } from "cheerio";
+// import { load } from "cheerio";
+
+// TUAN: load .env file to read OPENAI_API_KEY
+import 'dotenv/config';
 
 async function processFile(filePath: string): Promise<Document> {
   return await new Promise<Document>((resolve, reject) => {
@@ -13,7 +16,9 @@ async function processFile(filePath: string): Promise<Document> {
       if (err) {
         reject(err);
       } else {
-        const text = load(fileContents).text();
+        // TUAN: .text() stripped jsx tags from code block, simply use fileContents for now
+        // const text = load(fileContents).text();
+        const text = fileContents;
         const metadata = { source: filePath };
         const doc = new Document({ pageContent: text, metadata: metadata });
         resolve(doc);
@@ -58,7 +63,8 @@ class ReadTheDocsLoader extends BaseDocumentLoader {
   }
 }
 
-const directoryPath = "langchain.readthedocs.io";
+// const directoryPath = "langchain.readthedocs.io";
+const directoryPath = "compose-sdk-docs";
 const loader = new ReadTheDocsLoader(directoryPath);
 
 export const run = async () => {
@@ -71,6 +77,8 @@ export const run = async () => {
   });
   const docs = await textSplitter.splitDocuments(rawDocs);
   console.log("Docs splitted.");
+
+  console.log('docs', docs);
 
   console.log("Creating vector store...");
   /* Create the vectorstore */
